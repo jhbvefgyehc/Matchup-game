@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pick Your Winner</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-white flex flex-col items-center justify-center min-h-screen">
+  <div id="game" class="max-w-xl w-full p-6">
+    <h1 class="text-2xl font-bold mb-4 text-center">Pick Your Winner</h1>
+    <div id="matchup" class="flex flex-col gap-4 items-center"></div>
+    <div id="winner" class="hidden text-center mt-6">
+      <h2 class="text-xl font-bold">🏆 Winner</h2>
+      <p id="winnerName" class="text-2xl mt-2"></p>
+    </div>
+  </div>
+
+  <script>
+    // Contestants list
+    const contestants = [
+      "rohit", "manoj", "ashvanth (karadi)", "vishnu chaithanya", "rishab",
+      "akash rator", "srinethi", "abhay", "gautham sajjan", "geerishwar reddy",
+      "neeraj", "mani", "nagaram praveen kumar", "saptam", "adwaith",
+      "amalendhu", "anish", "tarakesh", "pranav alungal", "krishna baiju",
+      "abishek", "niruppam", "rajesh", "gajendra", "nishant",
+      "tejas", "devam rawal", "neppu", "yeshwant","sivanand"
+    ];
+
+    let round = [...contestants];
+    let nextRound = [];
+    let currentIndex = 0;
+
+    const matchupDiv = document.getElementById("matchup");
+    const winnerDiv = document.getElementById("winner");
+    const winnerName = document.getElementById("winnerName");
+
+    function showMatchup() {
+      matchupDiv.innerHTML = "";
+
+      if (round.length === 1) {
+        // Winner decided
+        matchupDiv.classList.add("hidden");
+        winnerDiv.classList.remove("hidden");
+        winnerName.textContent = round[0];
+        return;
+      }
+
+      if (currentIndex >= round.length) {
+        // Proceed to next round
+        round = [...nextRound];
+        nextRound = [];
+        currentIndex = 0;
+        showMatchup();
+        return;
+      }
+
+      const a = round[currentIndex];
+      const b = round[currentIndex + 1];
+
+      if (!b) {
+        // Odd number of contestants → auto-advance
+        nextRound.push(a);
+        currentIndex += 2;
+        showMatchup();
+        return;
+      }
+
+      // Added heading
+      const chooseHeading = document.createElement("h2");
+      chooseHeading.textContent = "Choose One of the Best";
+      chooseHeading.className = "text-lg font-semibold mb-2";
+
+      const btnA = document.createElement("button");
+      btnA.textContent = a;
+      btnA.className = "px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500";
+      btnA.onclick = () => {
+        nextRound.push(a);
+        currentIndex += 2;
+        showMatchup();
+      };
+
+      const vsText = document.createElement("div");
+      vsText.textContent = "vs";
+      vsText.className = "text-lg font-bold";
+
+      const btnB = document.createElement("button");
+      btnB.textContent = b;
+      btnB.className = "px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500";
+      btnB.onclick = () => {
+        nextRound.push(b);
+        currentIndex += 2;
+        showMatchup();
+      };
+
+      matchupDiv.appendChild(chooseHeading);
+      matchupDiv.appendChild(btnA);
+      matchupDiv.appendChild(vsText);
+      matchupDiv.appendChild(btnB);
+    }
+
+    showMatchup();
+  </script>
+</body>
+</html>
